@@ -1,0 +1,14 @@
+.listt{
+    background-color: aqua;
+    float: left;
+    border-color: brown;
+    border-radius:10%;
+    border-style: dashed;
+    border-width: 3px;
+    margin:2px ;
+    text-align: center;
+}
+
+.list{
+    background-color: blanchedalmond;
+}
