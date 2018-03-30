@@ -12,3 +12,18 @@
 .list{
     background-color: blanchedalmond;
 }
+
+
+.close:hover {
+  background-color: #f44336;
+  right:0;
+  top:0;
+}
+
+.close{
+	color: red;
+	right:0;
+    top:0;
+    margin: 2px;
+}
+

@@ -2,11 +2,9 @@
 var listv=document.getElementById("list");
 // innn the list name input
 var innn= document.getElementById("input1");
-innn.focus();
+//innn.focus();
 
 var lstorage = JSON.parse(localStorage.getItem('list') ) ;
-
-
 
 //add event listner on submit for add new list
 document.getElementById("NewList").addEventListener('submit', dataaa ) ;
@@ -63,31 +61,69 @@ function listn(arryname){
 		var pp= document.createElement('p');
 		pp.textContent=arryname[i];
 		iinput.setAttribute('type','text');
-		span.setAttribute('class','listt');
+		
+
+		var span3 = document.createElement("SPAN");
+ 		var txt2 = document.createTextNode("\u00D7");
+ 		span3.className = "close";
+ 		span3.appendChild(txt2);
+ 		pp.appendChild(span3);
+
+
+ 		span.setAttribute('class','listt');
 		span.appendChild(pp);
 		span.appendChild(iinput);
+
+
+		span3.onclick = (function(i) {
+		return function(){
+        delete kokoj.listTitles[arryname[i]];
+    	localStorage.setItem('list', JSON.stringify(kokoj)) 
+        window.location.reload(); }
+    	 })(i)
+
+
 		listv.appendChild(span);
 
-		sdd(span,arryname[i]);
+		itemss(span,arryname[i]);
+
 
     }    
 }
 
-function sdd(parent,arryname){
-	for (var s=0; s<lstorage.listTitles[arryname].length ;s++){
+
+		function itemss(parent,arryname){
+		for (var s=0; s<lstorage.listTitles[arryname].length ;s++){
 		var ssh= document.createElement('p');
 		ssh.textContent=lstorage.listTitles[arryname][s];
-		parent.appendChild(ssh) ;
+
+		var span2 = document.createElement("SPAN");
+ 		var txt = document.createTextNode("\u00D7");
+ 		span2.className = "close";
+ 		span2.appendChild(txt);
+ 		ssh.appendChild(span2);
+
+		parent.appendChild(ssh) ;    
+
+		span2.onclick = (function(s) {
+		return function(){
+        kokoj.listTitles[arryname].splice(s,1);
+    	localStorage.setItem('list', JSON.stringify(kokoj)) 
+        window.location.reload(); }
+    	 })(s)
 		
-	}
-}
+		
+	    }
+		}
+
+
 
 
 listv.addEventListener('keydown', function(e){
 	if(e.keyCode==13){
 	var vvalue= e.target.value;
 	var kkkk= e.target.parentElement;
-	var joik=e.target.parentElement.firstChild.textContent;
+	var joik=e.target.parentElement.firstChild.firstChild.textContent;
 	lstorage = JSON.parse(localStorage.getItem('list') ) ;
 
 	if(kokoj.listTitles[joik]==null){
@@ -95,6 +131,8 @@ listv.addEventListener('keydown', function(e){
 	} else {
 	kokoj.listTitles[joik].push(vvalue);
 	}
+
+
 	localStorage.setItem('list', JSON.stringify(kokoj));
 	lstorage = JSON.parse(localStorage.getItem('list') ) ;
 	window.location.reload();
@@ -104,33 +142,12 @@ listv.addEventListener('keydown', function(e){
 });
 
 
+document.addEventListener('mouseover',function(e){
+	e.target.focus();
+})
+
 
 /*
-listv.addEventListener('keydown', itemss );
-
-function itemss(){
-
-for (var i=0 ; i<kokoj.listTitles.length ; i++){
-	(function (i){
-
-	var mm=document.getElementById("l"+i);
-	mm.addEventListener('keydown', function(e){
-		if ( e.keyCode == 13 ) {
-			var nnn=document.getElementById("l"+i).value;
-				titleItems[i].push(nnn);
-				for (var j=0; j < titleItems.length ; j++){
-				
-				
-					document.getElementById("v"+i).innerHTML =  "<p>"+titleItems[i][j]+"</p>";
-	
-					window.console.log(titleItems[i]);
-				}//end for loop
-									}// end if
-																			 });
-	}(i));
-                           }//end of first foor loop
-						   					 } // end of list function
-
 // Get the modal
 var modal = document.getElementById('myModal');
 
