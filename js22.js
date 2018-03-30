@@ -2,6 +2,7 @@
 var listv=document.getElementById("list");
 // innn the list name input
 var innn= document.getElementById("input1");
+innn.focus();
 
 var lstorage = JSON.parse(localStorage.getItem('list') ) ;
 
@@ -73,10 +74,11 @@ function listn(arryname){
 }
 
 function sdd(parent,arryname){
-	for (var s=0; s<arryname.length ;s++){
+	for (var s=0; s<lstorage.listTitles[arryname].length ;s++){
 		var ssh= document.createElement('p');
 		ssh.textContent=lstorage.listTitles[arryname][s];
 		parent.appendChild(ssh) ;
+		
 	}
 }
 
