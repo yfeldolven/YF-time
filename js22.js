@@ -2,7 +2,6 @@
 var listv=document.getElementById("list");
 // innn the list name input
 var innn= document.getElementById("input1");
-//innn.focus();
 
 var lstorage = JSON.parse(localStorage.getItem('list') ) ;
 
@@ -32,23 +31,12 @@ if (lstorage==null){
 //function for event listner will be Ajax later
 function dataaa(e){
     if (!innn.value==''){
+    	if (kokoj.listTitles[innn.value]==undefined){
 
 		kokoj.listTitles[innn.value]=[];
-
-		var span= document.createElement('span');
-		var iinput=document.createElement('input');
-		var pp= document.createElement('p');
-		pp.textContent=innn.value;
-		iinput.setAttribute('type','text');
-		span.setAttribute('class','listt');
-		span.appendChild(pp);
-		span.appendChild(iinput);
-		listv.appendChild(span);
-
 		localStorage.setItem('list', JSON.stringify(kokoj));
 		lstorage = JSON.parse(localStorage.getItem('list') ) ;
-		
-
+							}
                         }
                   }
 
@@ -96,6 +84,7 @@ function listn(arryname){
 		for (var s=0; s<lstorage.listTitles[arryname].length ;s++){
 		var ssh= document.createElement('p');
 		ssh.textContent=lstorage.listTitles[arryname][s];
+		
 
 		var span2 = document.createElement("SPAN");
  		var txt = document.createTextNode("\u00D7");
@@ -143,9 +132,24 @@ listv.addEventListener('keydown', function(e){
 
 
 document.addEventListener('mouseover',function(e){
-	e.target.focus();
+
+     switch(e.target.tagName){
+     	case ('FORM') : e.target.querySelector("input").focus()
+     	 break ;
+     	case ('SPAN'): e.target.querySelector("span > input").focus()
+     	 break ;
+     	case('P'): e.target.parentElement.querySelector("input").focus()
+     	 break ;
+     	case('INPUT'): e.target.focus()
+     	 break ;
+     	default : 
+     	 break;
+     }
+    
 })
 
+//console.log(e.target.tagName) //
+//e.target.parentElement.parentElement.parentElement.querySelector("input").focus()
 
 /*
 // Get the modal
