@@ -11,16 +11,20 @@ document.getElementById("NewList").addEventListener('submit', dataaa ) ;
 
 
 //cheching if there Names or writes it's embty
-if (lstorage==null || Object.keys(lstorage.listTitles)==0){
+if (lstorage==null || lstorage.listTitles.length==0){
 	var p= document.createElement('p');
 		p.textContent='The List Is Embty';
 	listv.appendChild(p); 
 	var kokoj={
-		listTitles:{}
+		listTitles:[],
+		listItems:[]
 	}
+	localStorage.setItem('list', JSON.stringify(kokoj));
+	lstorage = JSON.parse(localStorage.getItem('list') ) ;
+
 } else {
 	kokoj= JSON.parse(localStorage.getItem('list') ) ;
-	listn(Object.keys(lstorage.listTitles));
+	listn(lstorage.listTitles);
 }
 
 
@@ -31,12 +35,9 @@ if (lstorage==null || Object.keys(lstorage.listTitles)==0){
 //function for event listner will be Ajax later
 function dataaa(e){
     if (!innn.value==''){
-    	if (kokoj.listTitles[innn.value]==undefined){
-
-		kokoj.listTitles[innn.value]=[];
+		kokoj.listTitles.push(innn.value);
 		localStorage.setItem('list', JSON.stringify(kokoj));
 		lstorage = JSON.parse(localStorage.getItem('list') ) ;
-							}
                         }
                   }
 
@@ -66,7 +67,7 @@ function listn(arryname){
 
 		span3.onclick = (function(i) {
 		return function(){
-        delete kokoj.listTitles[arryname[i]];
+        kokoj.listTitles.splice(i,1);
     	localStorage.setItem('list', JSON.stringify(kokoj)) 
         window.location.reload(); }
     	 })(i)
@@ -74,7 +75,7 @@ function listn(arryname){
 
 		listv.appendChild(span);
 
-		itemss(span,arryname[i]);
+		itemss(span,i);
 
 
 
@@ -86,13 +87,11 @@ function listn(arryname){
 		input3.setAttribute('value',arryname[i]);
 		input3.setAttribute('class','style');
 
-		this.replaceWith(input3);
+		pp.replaceWith(input3);
 
 		input3.addEventListener("keydown",function(e){
-			if(e.keyCode=== 13){
-				kokoj.listTitles[input3.value] = kokoj.listTitles[arryname[i]];
-				if(input3.value != arryname[i]){
-				delete kokoj.listTitles[arryname[i]]; }
+			if(e.keyCode=== 13){ 
+				kokoj.listTitles[i]=input3.value;
 				localStorage.setItem('list', JSON.stringify(kokoj));
 				window.location.reload();
 			}
@@ -102,37 +101,45 @@ function listn(arryname){
 
 
 
-
+    	(function(i){
+    	return function(){
 		iinput.addEventListener('keydown', function(e){
 			if(e.keyCode==13){
 			var vvalue= e.target.value;
-			var kkkk= e.target.parentElement;
-			var joik=e.target.parentElement.firstChild.firstChild.textContent;
+			alert(kknn);
 			lstorage = JSON.parse(localStorage.getItem('list') ) ;
 
-			if(kokoj.listTitles[joik]==null){
-				kokoj.listTitles[joik]=[vvalue];
+			if(kokoj.listItems[kknn]==null){
+				kokoj.listItems[kknn]=[vvalue];
 			} else {
-			kokoj.listTitles[joik].push(vvalue);
+			kokoj.listItems[kknn].push(vvalue);
 			}
 
 
 		    localStorage.setItem('list', JSON.stringify(kokoj));
 		    lstorage = JSON.parse(localStorage.getItem('list') ) ;
 	        window.location.reload();
-  	        }
+  	        } 
         });
 
+        }}(i))
 
 
-    }    
+
+
+    }   
 }
 
+   			while(lstorage.listItems.length<lstorage.listTitles.length){
+			kokoj.listItems.push([]);
+			localStorage.setItem('list', JSON.stringify(kokoj));
+			break;
+		     } 
 
 		function itemss(parent,arryname){
-		for (var s=0; s<lstorage.listTitles[arryname].length ;s++){
+		for (var s=0; s<kokoj.listItems[arryname].length ;s++){
 		var ssh= document.createElement('p');
-		ssh.textContent=lstorage.listTitles[arryname][s];
+		ssh.textContent=lstorage.listItems[arryname][s];
 		
 
 		var span2 = document.createElement("SPAN");
@@ -145,7 +152,7 @@ function listn(arryname){
 
 		span2.onclick = (function(s) {
 		return function(){
-        kokoj.listTitles[arryname].splice(s,1);
+        kokoj.listItems[arryname].splice(s,1);
     	localStorage.setItem('list', JSON.stringify(kokoj)) 
         window.location.reload(); }
     	 })(s)
@@ -156,14 +163,14 @@ function listn(arryname){
 		return function(){
 		var input3 = document.createElement("input");
 		input3.setAttribute('type','text');
-		input3.setAttribute('value',kokoj.listTitles[arryname][s]);
+		input3.setAttribute('value',kokoj.listItems[arryname][s]);
 		input3.setAttribute('class','style');
 
 		this.replaceWith(input3);
 
 		input3.addEventListener("keydown",function(e){
 			if(e.keyCode=== 13){
-				kokoj.listTitles[arryname][s]= e.target.value;
+				kokoj.listItems[arryname][s]= e.target.value;
 				localStorage.setItem('list', JSON.stringify(kokoj));
 				window.location.reload();
 			}
