@@ -11,7 +11,7 @@ document.getElementById("NewList").addEventListener('submit', dataaa ) ;
 
 
 //cheching if there Names or writes it's embty
-if (lstorage==null){
+if (lstorage==null || Object.keys(lstorage.listTitles)==0){
 	var p= document.createElement('p');
 		p.textContent='The List Is Embty';
 	listv.appendChild(p); 
@@ -49,6 +49,7 @@ function listn(arryname){
 		var pp= document.createElement('p');
 		pp.textContent=arryname[i];
 		iinput.setAttribute('type','text');
+
 		
 
 		var span3 = document.createElement("SPAN");
@@ -76,6 +77,54 @@ function listn(arryname){
 		itemss(span,arryname[i]);
 
 
+
+
+		pp.onclick = (function(i) {
+		return function(){
+		var input3 = document.createElement("input");
+		input3.setAttribute('type','text');
+		input3.setAttribute('value',arryname[i]);
+		input3.setAttribute('class','style');
+
+		this.replaceWith(input3);
+
+		input3.addEventListener("keydown",function(e){
+			if(e.keyCode=== 13){
+				kokoj.listTitles[input3.value] = kokoj.listTitles[arryname[i]];
+				if(input3.value != arryname[i]){
+				delete kokoj.listTitles[arryname[i]]; }
+				localStorage.setItem('list', JSON.stringify(kokoj));
+				window.location.reload();
+			}
+		})
+        }
+    	 })(i)
+
+
+
+
+		iinput.addEventListener('keydown', function(e){
+			if(e.keyCode==13){
+			var vvalue= e.target.value;
+			var kkkk= e.target.parentElement;
+			var joik=e.target.parentElement.firstChild.firstChild.textContent;
+			lstorage = JSON.parse(localStorage.getItem('list') ) ;
+
+			if(kokoj.listTitles[joik]==null){
+				kokoj.listTitles[joik]=[vvalue];
+			} else {
+			kokoj.listTitles[joik].push(vvalue);
+			}
+
+
+		    localStorage.setItem('list', JSON.stringify(kokoj));
+		    lstorage = JSON.parse(localStorage.getItem('list') ) ;
+	        window.location.reload();
+  	        }
+        });
+
+
+
     }    
 }
 
@@ -100,35 +149,32 @@ function listn(arryname){
     	localStorage.setItem('list', JSON.stringify(kokoj)) 
         window.location.reload(); }
     	 })(s)
+
+
+    	
+    	ssh.onclick = (function(s) {
+		return function(){
+		var input3 = document.createElement("input");
+		input3.setAttribute('type','text');
+		input3.setAttribute('value',kokoj.listTitles[arryname][s]);
+		input3.setAttribute('class','style');
+
+		this.replaceWith(input3);
+
+		input3.addEventListener("keydown",function(e){
+			if(e.keyCode=== 13){
+				kokoj.listTitles[arryname][s]= e.target.value;
+				localStorage.setItem('list', JSON.stringify(kokoj));
+				window.location.reload();
+			}
+		})
+        }
+    	 })(s)
+    	
 		
 		
 	    }
 		}
-
-
-
-
-listv.addEventListener('keydown', function(e){
-	if(e.keyCode==13){
-	var vvalue= e.target.value;
-	var kkkk= e.target.parentElement;
-	var joik=e.target.parentElement.firstChild.firstChild.textContent;
-	lstorage = JSON.parse(localStorage.getItem('list') ) ;
-
-	if(kokoj.listTitles[joik]==null){
-		kokoj.listTitles[joik]=[vvalue];
-	} else {
-	kokoj.listTitles[joik].push(vvalue);
-	}
-
-
-	localStorage.setItem('list', JSON.stringify(kokoj));
-	lstorage = JSON.parse(localStorage.getItem('list') ) ;
-	window.location.reload();
-	
-	
-    }
-});
 
 
 document.addEventListener('mouseover',function(e){
@@ -137,8 +183,6 @@ document.addEventListener('mouseover',function(e){
      	case ('FORM') : e.target.querySelector("input").focus()
      	 break ;
      	case ('SPAN'): e.target.querySelector("span > input").focus()
-     	 break ;
-     	case('P'): e.target.parentElement.querySelector("input").focus()
      	 break ;
      	case('INPUT'): e.target.focus()
      	 break ;
