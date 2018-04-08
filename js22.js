@@ -25,6 +25,7 @@ if (lstorage==null || lstorage.listTitles.length==0){
 } else {
 	kokoj= JSON.parse(localStorage.getItem('list') ) ;
 	listn(lstorage.listTitles);
+	console.log(kokoj);
 }
 
 
@@ -75,8 +76,6 @@ function listn(arryname){
 
 		listv.appendChild(span);
 
-		itemss(span,i);
-
 
 
 
@@ -87,7 +86,7 @@ function listn(arryname){
 		input3.setAttribute('value',arryname[i]);
 		input3.setAttribute('class','style');
 
-		pp.replaceWith(input3);
+		this.replaceWith(input3);
 
 		input3.addEventListener("keydown",function(e){
 			if(e.keyCode=== 13){ 
@@ -97,46 +96,46 @@ function listn(arryname){
 			}
 		})
         }
-    	 })(i)
+    	 }(i))
+    	
+    	
 
 
-
-    	(function(i){
-    	return function(){
-		iinput.addEventListener('keydown', function(e){
+		function itemInput(i){
+			return function(){
+			iinput.addEventListener('keydown', function(e){
 			if(e.keyCode==13){
 			var vvalue= e.target.value;
-			alert(kknn);
 			lstorage = JSON.parse(localStorage.getItem('list') ) ;
 
-			if(kokoj.listItems[kknn]==null){
-				kokoj.listItems[kknn]=[vvalue];
-			} else {
-			kokoj.listItems[kknn].push(vvalue);
-			}
+			kokoj.listItems[i].push(vvalue);
 
 
 		    localStorage.setItem('list', JSON.stringify(kokoj));
 		    lstorage = JSON.parse(localStorage.getItem('list') ) ;
 	        window.location.reload();
-  	        } 
-        });
+  	        }
+  	        }
+		  ); 
+			}()
+		} itemInput(i) ;   
 
-        }}(i))
 
 
+		     itemss(span,i);
 
 
     }   
 }
 
-   			while(lstorage.listItems.length<lstorage.listTitles.length){
-			kokoj.listItems.push([]);
-			localStorage.setItem('list', JSON.stringify(kokoj));
-			break;
-		     } 
+   
 
 		function itemss(parent,arryname){
+		    while(kokoj.listItems.length<kokoj.listTitles.length){
+			kokoj.listItems.push([]);
+			localStorage.setItem('list', JSON.stringify(kokoj));
+				break;
+		     } 
 		for (var s=0; s<kokoj.listItems[arryname].length ;s++){
 		var ssh= document.createElement('p');
 		ssh.textContent=lstorage.listItems[arryname][s];
