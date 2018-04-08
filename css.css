@@ -20,6 +20,13 @@
   top:0;
 }
 
+
+.listt:hover {
+  background-color: #ff44;
+  right:0;
+  top:0;
+
+
 .close{
 	color: red;
 	right:0;
