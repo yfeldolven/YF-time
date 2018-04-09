@@ -20,21 +20,21 @@ if (lstorage==null || lstorage.listTitles.length==0){
 		listTitles:[],
 		listItems:[]
 	}
-	colorid.setAttribute('value',lstorage.color);
-	kokoj.color=lstorage.color;
-	localStorage.setItem('list', JSON.stringify(kokoj));
-	lstorage = JSON.parse(localStorage.getItem('list') ) ;
-	document.body.style.backgroundColor=lstorage.color;
-
+	color();
 
 } else {
 	kokoj= JSON.parse(localStorage.getItem('list') ) ;
 	listn(lstorage.listTitles);
-	colorid.setAttribute('value',lstorage.color);
-	document.body.style.backgroundColor=lstorage.color;
+	color();
 }
 
-
+function color(){
+	colorid.setAttribute('value',lstorage.color);
+	kokoj.color=colorid.value;
+	localStorage.setItem('list', JSON.stringify(kokoj));
+	lstorage = JSON.parse(localStorage.getItem('list') ) ;
+	document.body.style.backgroundColor=lstorage.color;
+}
 
 //function for event listner will be Ajax later
 function dataaa(e){
@@ -42,11 +42,10 @@ function dataaa(e){
 		kokoj.listTitles.push(innn.value);
 		localStorage.setItem('list', JSON.stringify(kokoj));
 		lstorage = JSON.parse(localStorage.getItem('list') ) ;
+		color();
                         }
-    kokoj.color=colorid.value;
-	localStorage.setItem('list', JSON.stringify(kokoj));
-	lstorage = JSON.parse(localStorage.getItem('list') ) ;
-	document.body.style.backgroundColor=lstorage.color;
+
+        color();
                   }
 
 // function to create list names depending on arry length
