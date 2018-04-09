@@ -80,6 +80,8 @@ function listn(arryname){
 		span3.onclick = (function(i) {
 		return function(){
         kokoj.listTitles.splice(i,1);
+        kokoj.listItems.splice(i,1);
+
     	localStorage.setItem('list', JSON.stringify(kokoj)) 
         window.location.reload(); }
     	 })(i)
