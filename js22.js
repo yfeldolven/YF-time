@@ -21,33 +21,36 @@ if (lstorage==null || lstorage.listTitles.length==0){
 		listItems:[],
 		listcolor:[]
 	}
-	color();
+	//color();
 
 } else {
 	kokoj= JSON.parse(localStorage.getItem('list') ) ;
 	listn(lstorage.listTitles);
-	color();
+	//color();
 }
 
-function color(){
-	colorid.setAttribute('value',lstorage.color);
-	kokoj.color=colorid.value;
-	localStorage.setItem('list', JSON.stringify(kokoj));
-	lstorage = JSON.parse(localStorage.getItem('list') ) ;
-	//document.body.style.backgroundColor=lstorage.color;
-}
+
+//changing background color
+// function color(){
+// 	colorid.setAttribute('value',lstorage.color);
+// 	kokoj.color=colorid.value;
+// 	localStorage.setItem('list', JSON.stringify(kokoj));
+// 	lstorage = JSON.parse(localStorage.getItem('list') ) ;
+// 	document.body.style.backgroundColor=lstorage.color;
+// }
 
 //function for event listner will be Ajax later
 function dataaa(e){
     if (!innn.value==''){
 		kokoj.listTitles.push(innn.value);
 		kokoj.listColor.push(colorid.value);
+
 		localStorage.setItem('list', JSON.stringify(kokoj));
 		lstorage = JSON.parse(localStorage.getItem('list') ) ;
-		color();
+		//color();
                         }
 
-        color();
+        //color();
                   }
 
 // function to create list names depending on arry length
@@ -88,7 +91,7 @@ function listn(arryname){
 		} } )(i) );
 
 
-		// remove an item
+		// remove list
 		span3.onclick = (function(i) {
 		return function(){
         kokoj.listTitles.splice(i,1);
