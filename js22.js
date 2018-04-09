@@ -18,7 +18,8 @@ if (lstorage==null || lstorage.listTitles.length==0){
 	listv.appendChild(p); 
 	var kokoj={
 		listTitles:[],
-		listItems:[]
+		listItems:[],
+		listcolor:[]
 	}
 	color();
 
@@ -33,13 +34,14 @@ function color(){
 	kokoj.color=colorid.value;
 	localStorage.setItem('list', JSON.stringify(kokoj));
 	lstorage = JSON.parse(localStorage.getItem('list') ) ;
-	document.body.style.backgroundColor=lstorage.color;
+	//document.body.style.backgroundColor=lstorage.color;
 }
 
 //function for event listner will be Ajax later
 function dataaa(e){
     if (!innn.value==''){
 		kokoj.listTitles.push(innn.value);
+		kokoj.listColor.push(colorid.value);
 		localStorage.setItem('list', JSON.stringify(kokoj));
 		lstorage = JSON.parse(localStorage.getItem('list') ) ;
 		color();
@@ -53,6 +55,8 @@ function listn(arryname){
 	for (var i=0; i<arryname.length; i++){
 
 		var span= document.createElement('span');
+		var colorls= document.createElement('input');
+		colorls.setAttribute('type','color');
 		var iinput=document.createElement('input');
 		var pp= document.createElement('p');
 		pp.textContent=arryname[i];
@@ -69,19 +73,34 @@ function listn(arryname){
 
 
  		span.setAttribute('class','listt');
+ 		span.appendChild(colorls);
 		span.appendChild(pp);
 		span.appendChild(iinput);
 
 
+		//change color
+			colorls.addEventListener('change',(function(i){
+			return function(){
+			kokoj.listColor[i]=this.value;
+			localStorage.setItem('list',JSON.stringify(kokoj));
+			lstorage = JSON.parse(localStorage.getItem('list') ) ;
+			this.parentElement.style.backgroundColor=lstorage.listColor[i];
+		} } )(i) );
+
+
+		// remove an item
 		span3.onclick = (function(i) {
 		return function(){
         kokoj.listTitles.splice(i,1);
         kokoj.listItems.splice(i,1);
+        kokoj.listColor.splice(i,1);
 
     	localStorage.setItem('list', JSON.stringify(kokoj)) 
         window.location.reload(); }
     	 })(i)
 
+    	colorls.setAttribute('value',lstorage.listColor[i]);
+    	span.style.backgroundColor=lstorage.listColor[i];
 
 		listv.appendChild(span);
 
@@ -103,7 +122,7 @@ function listn(arryname){
 				localStorage.setItem('list', JSON.stringify(kokoj));
 				window.location.reload();
 			}
-		})
+		    })
         }
     	 }(i))
     	
