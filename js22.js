@@ -20,6 +20,7 @@ if (lstorage==null || lstorage.listTitles.length==0){
 		listTitles:[],
 		listItems:[]
 	}
+	colorid.setAttribute('value',lstorage.color);
 	kokoj.color=lstorage.color;
 	localStorage.setItem('list', JSON.stringify(kokoj));
 	lstorage = JSON.parse(localStorage.getItem('list') ) ;
@@ -29,17 +30,9 @@ if (lstorage==null || lstorage.listTitles.length==0){
 } else {
 	kokoj= JSON.parse(localStorage.getItem('list') ) ;
 	listn(lstorage.listTitles);
+	colorid.setAttribute('value',lstorage.color);
 	document.body.style.backgroundColor=lstorage.color;
 }
-
-
-//page color
-colorid.addEventListener('change',function(){
-	kokoj.color=colorid.value;
-	localStorage.setItem('list', JSON.stringify(kokoj));
-	lstorage = JSON.parse(localStorage.getItem('list') ) ;
-	document.body.style.backgroundColor=lstorage.color;
-});
 
 
 
@@ -50,6 +43,10 @@ function dataaa(e){
 		localStorage.setItem('list', JSON.stringify(kokoj));
 		lstorage = JSON.parse(localStorage.getItem('list') ) ;
                         }
+    kokoj.color=colorid.value;
+	localStorage.setItem('list', JSON.stringify(kokoj));
+	lstorage = JSON.parse(localStorage.getItem('list') ) ;
+	document.body.style.backgroundColor=lstorage.color;
                   }
 
 // function to create list names depending on arry length
