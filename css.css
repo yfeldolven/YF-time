@@ -7,12 +7,17 @@
     border-width: 3px;
     margin:2px ;
     text-align: center;
+    padding: 2px;
 }
 
 .list{
     background-color: blanchedalmond;
 }
 
+.style {
+display: block;
+margin: 5px ;
+}
 
 .close:hover {
   background-color: #f44336;
@@ -20,22 +25,27 @@
   top:0;
 }
 
-
-.listt:hover {
-  background-color: #ff44;
-  right:0;
-  top:0;
-
-
 .close{
-	color: red;
-	right:0;
+  color: red;
+  right:0;
     top:0;
     margin: 2px;
 }
 
-.style {
-display: block;
-margin: 5px 
+.listt:hover {
+  background-color: #ffaa;
+  right:0;
+  top:0;
 }
+
+
+p:hover {
+  background-color: #aaff;
+  font-weight: bold;
+}
+
+
+
+
+
 

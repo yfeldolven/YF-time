@@ -1,7 +1,8 @@
 // element list
 var listv=document.getElementById("list");
 // innn the list name input
-var innn= document.getElementById("input1");
+var innn= document.getElementById("input1"),
+colorid = document.getElementById('colorid');
 
 var lstorage = JSON.parse(localStorage.getItem('list') ) ;
 
@@ -19,17 +20,26 @@ if (lstorage==null || lstorage.listTitles.length==0){
 		listTitles:[],
 		listItems:[]
 	}
+	kokoj.color=lstorage.color;
 	localStorage.setItem('list', JSON.stringify(kokoj));
 	lstorage = JSON.parse(localStorage.getItem('list') ) ;
+	document.body.style.backgroundColor=lstorage.color;
+
 
 } else {
 	kokoj= JSON.parse(localStorage.getItem('list') ) ;
 	listn(lstorage.listTitles);
-	console.log(kokoj);
+	document.body.style.backgroundColor=lstorage.color;
 }
 
 
-
+//page color
+colorid.addEventListener('change',function(){
+	kokoj.color=colorid.value;
+	localStorage.setItem('list', JSON.stringify(kokoj));
+	lstorage = JSON.parse(localStorage.getItem('list') ) ;
+	document.body.style.backgroundColor=lstorage.color;
+});
 
 
 
@@ -51,6 +61,7 @@ function listn(arryname){
 		var pp= document.createElement('p');
 		pp.textContent=arryname[i];
 		iinput.setAttribute('type','text');
+		iinput.setAttribute('class','style');
 
 		
 
