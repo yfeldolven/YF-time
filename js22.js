@@ -19,7 +19,7 @@ if (lstorage==null || lstorage.listTitles.length==0){
 	var kokoj={
 		listTitles:[],
 		listItems:[],
-		listcolor:[]
+		listColor:[]
 	}
 	//color();
 
