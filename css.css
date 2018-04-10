@@ -32,16 +32,11 @@ margin: 5px ;
     margin: 2px;
 }
 
-.listt:hover {
-  background-color: #ffaa;
-  right:0;
-  top:0;
-}
-
 
 p:hover {
   background-color: #aaff;
   font-weight: bold;
+  color:white;
 }
 
 
