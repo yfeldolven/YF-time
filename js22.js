@@ -219,8 +219,6 @@ document.addEventListener('mouseover',function(e){
      switch(e.target.tagName){
      	case ('FORM') : e.target.querySelector("input").focus()
      	 break ;
-     	case ('SPAN'): e.target.querySelector("span > input").focus()
-     	 break ;
      	case('INPUT'): e.target.focus()
      	 break ;
      	default : 
