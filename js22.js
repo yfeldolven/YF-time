@@ -167,6 +167,7 @@ function listn(arryname){
 			localStorage.setItem('list', JSON.stringify(kokoj));
 				break;
 		     } 
+
 		for (var s=0; s<kokoj.listItems[arryname].length ;s++){
 		var ssh= document.createElement('p');
 		ssh.textContent=lstorage.listItems[arryname][s];
@@ -179,19 +180,18 @@ function listn(arryname){
  		ssh.appendChild(span2);
 
 		parent.appendChild(ssh) ;    
-
-		span2.onclick = (function(s) {
-		return function(){
-        kokoj.listItems[arryname].splice(s,1);
-    	localStorage.setItem('list', JSON.stringify(kokoj)) 
-        window.location.reload(); }
-    	 })(s)
-
-
     	
-    	ssh.onclick = (function(s) {
+
+    	function events(s){
 		return function(){
-		var input3 = document.createElement("input");
+			
+  	    ssh.addEventListener('click',function(e){
+
+  		switch(e.target.tagName){
+
+
+     	case ('P') : 
+     	var input3 = document.createElement("input");
 		input3.setAttribute('type','text');
 		input3.setAttribute('value',kokoj.listItems[arryname][s]);
 		input3.setAttribute('class','style');
@@ -205,10 +205,24 @@ function listn(arryname){
 				window.location.reload();
 			}
 		})
-        }
-    	 })(s)
-    	
-		
+     	 break ;
+
+
+     	case('SPAN'): 
+     	kokoj.listItems[arryname].splice(s,1);
+    	localStorage.setItem('list', JSON.stringify(kokoj)) 
+        window.location.reload(); 
+     	 break ;
+
+
+     	default:  
+     	 break;
+        } 
+        });
+
+		}() } events(s) ;
+
+	
 		
 	    }
 		}
