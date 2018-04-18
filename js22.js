@@ -4,30 +4,31 @@ var listv=document.getElementById("list");
 var innn= document.getElementById("input1"),
 colorid = document.getElementById('colorid');
 
-var lstorage = JSON.parse(localStorage.getItem('list') ) ;
+var lstorage = JSON.parse(localStorage.getItem('list') ) ,
+	kokoj = lstorage;
 
 //add event listner on submit for add new list
 document.getElementById("NewList").addEventListener('submit', dataaa ) ;
 
 
 
-//cheching if there Names or writes it's embty
-if (lstorage==null || lstorage.listTitles.length==0){
+    //cheching if there Names or writes it's embty
+	if (lstorage==null || lstorage.listTitles.length==0){
 	var p= document.createElement('p');
 		p.textContent='The List Is Embty';
 	listv.appendChild(p); 
-	var kokoj={
+		kokoj={
 		listTitles:[],
 		listItems:[],
 		listColor:[]
 	}
-	//color();
 
-} else {
+	} else {
 	kokoj= JSON.parse(localStorage.getItem('list') ) ;
 	listn(lstorage.listTitles);
-	//color();
-}
+	}
+
+
 
 
 //changing background color
@@ -229,22 +230,10 @@ function listn(arryname){
 
 
 document.addEventListener('mouseover',function(e){
-
-     switch(e.target.tagName){
-     	case ('FORM') : e.target.querySelector("input").focus()
-     	 break ;
-     	case('INPUT'): e.target.focus()
-     	 break ;
-     	default : 
-     	 break;
-     }
-    
+			e.target.focus();
 })
 
-//console.log(e.target.tagName) //
-//e.target.parentElement.parentElement.parentElement.querySelector("input").focus()
 
-/*
 // Get the modal
 var modal = document.getElementById('myModal');
 
@@ -270,4 +259,3 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
-*/
