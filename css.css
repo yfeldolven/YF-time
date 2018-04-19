@@ -8,6 +8,8 @@
     margin:2px ;
     text-align: center;
     padding: 2px;
+    word-wrap: break-word;
+    overflow: auto;
 }
 
 .list{
@@ -42,6 +44,22 @@ p:hover {
   color:white;
 }
 
+.btn{
+  position: fixed;
+  color: red;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20;
+  right : 50%;
+}
+
+.NewList{
+  color: red;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20;
+  right : 50%;
+}
 
 
 
@@ -67,7 +85,7 @@ p:hover {
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
     word-wrap: break-word;
-    height: auto; /* Full height */
+    overflow: auto;
 }
 
 /* The Close Button */
