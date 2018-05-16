@@ -1,3 +1,57 @@
+let model = {
+
+};
+
+
+let control = {
+
+};
+
+let view ={
+	html : function(){
+		let form = document.createElement('form'),
+			textInput = document.createElement('input'),
+			colorInput = document.createElement('input'),
+			addListInput =  document.createElement('input'),
+			listDiv =  document.createElement('div'),
+			fragmant = document.createDocumentFragment();
+
+
+		textInput.setAttribute('type','text');
+		colorInput.setAttribute('type','color');
+		addListInput.setAttribute('type','submit');
+
+		textInput.setAttribute('value','Name Your List');
+		colorInput.setAttribute('value','#aaaaaa');
+		addListInput.setAttribute('value','Add New List');
+
+		form.setAttribute('id','NewList');
+		textInput.setAttribute('id','input1');
+		colorInput.setAttribute('id','colorid');
+
+		listDiv.setAttribute('id','list');
+		listDiv.setAttribute('class','list');
+		form.setAttribute('class','NewList');
+
+
+		form.appendChild(textInput);
+		form.appendChild(colorInput);
+		form.appendChild(addListInput);
+		fragmant.appendChild(form);
+		fragmant.appendChild(listDiv);
+		document.body.appendChild(fragmant);
+		
+	}
+};
+view.html();
+
+
+
+
+
+
+
+
 // element list
 var listv=document.getElementById('list');
 // innn the list name input
@@ -84,7 +138,7 @@ function listn(arryname){
 
 
 		// remove list
-		span3.onclick = (function(i) {
+		span3.addEventListener('click' , (function(i) {
 			return function(){
 				kokoj.listTitles.splice(i,1);
 				kokoj.listItems.splice(i,1);
@@ -93,7 +147,7 @@ function listn(arryname){
 				localStorage.setItem('list', JSON.stringify(kokoj)) ;
 				window.location.reload(); 
 			};
-		} )(i) ;
+		} )(i)  ) ;
 
 		colorls.setAttribute('value',lstorage.listColor[i]);
 		span.style.backgroundColor=lstorage.listColor[i];
@@ -101,7 +155,7 @@ function listn(arryname){
 		listv.appendChild(span);
 
 
-		pp.onclick = (function(i) {
+		pp.addEventListener('click' ,(function(i) {
 			return function(){
 				var input3 = document.createElement('input');
 				input3.setAttribute('type','text');
@@ -118,7 +172,7 @@ function listn(arryname){
 					}
 		    });
 			};
-    	 }(i));
+    	 }(i) )  );
     	
     	
 
