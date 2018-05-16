@@ -1,10 +1,29 @@
 let model = {
+	kokoj : {
+		listTitles:[],
+		listItems:[],
+		listColor:[]
+	},
 
+	lstorage : JSON.parse(localStorage.getItem('list') ) ,
+
+	render : function(){
+		if(this.lstorage==null){
+			localStorage.setItem('list',JSON.stringify(this.kokoj) ) ;
+		}
+		else{
+			this.kokoj = this.lstorage;
+		}
+	}
 };
 
 
 let control = {
 
+	render : function(){
+		model.render();
+		view.html();
+	}
 };
 
 let view ={
@@ -40,10 +59,10 @@ let view ={
 		fragmant.appendChild(form);
 		fragmant.appendChild(listDiv);
 		document.body.appendChild(fragmant);
-		
+
 	}
 };
-view.html();
+control.render();
 
 
 
