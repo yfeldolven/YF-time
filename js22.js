@@ -9,12 +9,15 @@ let model = {
 
 	while : function(){
 		while(this.kokoj.listItems.length<this.kokoj.listTitles.length){
-			kokoj.listItems.push([]);
-			localStorage.setItem('list', JSON.stringify(kokoj));
+			this.kokoj.listItems.push([]);
+			localStorage.setItem('list', JSON.stringify(this.kokoj));
 			break;
-				 } 
+		} 
 	}
 };
+
+
+
 
 
 let control = {
@@ -24,7 +27,7 @@ let control = {
 			view.start();
 		}
 		else{
-			this.kokoj = model.lstorage ;
+			model.kokoj = model.lstorage ;
 		}
 	},
 
@@ -40,13 +43,37 @@ let control = {
 	
 	},
 
+
+	evets : function(list){
+		document.addEventListener('click',function(e){
+
+			if(e.target.tagName === 'P' && e.target.className === 'items'){
+				view.itemEvent(model.kokoj , e)
+			}
+
+
+			if(e.target.className === 'close item' ){
+				view.itemClose( model.kokoj , e );
+			}
+
+			console.log(
+				//e.target.id
+			);
+		
+		});
+	},
+
 	render : function(){
 		view.html();
 		this.start();
-		view.list( model.lstorage );
 		model.while();
+		view.list( model.kokoj );
+		this.evets();
 	}
 };
+
+
+
 
 let view ={
 	html : function(){
@@ -116,6 +143,7 @@ let view ={
 	
 	
 			theList.setAttribute('class','listt');
+			theList.setAttribute('num', i );
 			theList.appendChild(listColor);
 			theList.appendChild(listName);
 			theList.appendChild(mainInput);
@@ -130,11 +158,10 @@ let view ={
 
 	items : function( parent , list , num ){
 
-		for (let s=0; s<list.listItems[num].length ;s++){
+		for ( let s=0; s < list.listItems[num].length ; s++ ){
 			let item = document.createElement('p'),
 				itemClose = document.createElement('SPAN'),
-				itemCloseTxt = document.createTextNode('\u00D7'),
-				listView = document.getElementById('list');
+				itemCloseTxt = document.createTextNode('\u00D7');
 
 
 			item.textContent = list.listItems[num][s];
@@ -142,15 +169,49 @@ let view ={
 			item.setAttribute('id',s);
 
 
-	 		itemClose.className = 'close';
+	 		itemClose.className = 'close item';
 	 		itemClose.appendChild(itemCloseTxt);
 	 		item.appendChild(itemClose);
 
 			parent.appendChild(item) ;
-			listView.appendChild(parent);
+			
 
 
 		}
+		document.getElementById('list').appendChild(parent);
+	},
+
+
+	itemEvent : function(list , e){
+		let editInput = document.createElement('input');
+			lnum = e.target.parentElement.getAttribute('num'),
+			inum = e.target.id ;
+
+		editInput.setAttribute('type','text');
+		editInput.setAttribute('value',list.listItems[lnum][inum]);
+		editInput.setAttribute('class','style items');
+
+		e.target.replaceWith(editInput);
+
+		editInput.addEventListener('keydown',function(e){
+			if(e.keyCode=== 13){
+			list.listItems[lnum][inum]= e.target.value;
+			// i want remove this down to be in control
+			localStorage.setItem('list', JSON.stringify(model.kokoj));
+			window.location.reload();
+			}
+		});
+	},
+
+
+	itemClose : function(list , e){
+		let lnum = e.target.parentElement.parentElement.getAttribute('num'),
+			inum = e.target.parentElement.id ;
+
+		list.listItems[lnum].splice(inum,1);
+		// i want remove this down to be in control
+		localStorage.setItem('list', JSON.stringify(model.kokoj)); 
+		window.location.reload(); 
 	}
 
 };
@@ -167,49 +228,21 @@ control.render();
 
 
 
-document.addEventListener('click',(function(e){
-
-	console.log(
-		e.target.id
-	);
-	let span = document.getElementsByClassName('listt');
-		//targett = e.target ;
-		//p = targett.parentElement.getElementsByClassName('items') ;
-
-
-		// let oko = [0];
-		// oko.push(e.target);
-
-		// 	let p = oko[1].parentElement.getElementsByClassName('items') ;
-		// 	console.log(p);
-		
-
-		//console.log(p);
-		// console.log(target);
-	// for (let sss=0 ; sss<kkk.span.length ; sss++ ){
-	// 	if (kkk.span[sss]==e.target) {console.log(sss)} 
-	// 	//if (kkk.p(sss)==e.target) {console.log('Yes')} 
-	// }
-
-	// for (let rrr=0 ; rrr<kkk.p.length ; rrr++ ){
-	// 	//if (kkk.span[sss]==e.target) {console.log(sss)} 
-	// 	if (kkk.p[rrr]==e.target) {console.log(rrr)} 
-	// }
-}) ) ;
 
 
 
-// element list
-var listv=document.getElementById('list');
-// innn the list name input
-var innn= document.getElementById('input1'),
-	colorid = document.getElementById('colorid');
 
-var lstorage = JSON.parse(localStorage.getItem('list') ) ,
-	kokoj = lstorage;
+// // element list
+// var listv=document.getElementById('list');
+// // innn the list name input
+// var innn= document.getElementById('input1'),
+// 	colorid = document.getElementById('colorid');
+
+// var lstorage = JSON.parse(localStorage.getItem('list') ) ,
+// 	kokoj = lstorage;
 
 //add event listner on submit for add new list
-document.getElementById('NewList').addEventListener('submit', dataaa ) ;
+//document.getElementById('NewList').addEventListener('submit', dataaa ) ;
 
 
 
@@ -233,17 +266,17 @@ document.getElementById('NewList').addEventListener('submit', dataaa ) ;
 
 
 //function for event listner will be Ajax later
-function dataaa(e){
-	if (!innn.value==''){
-		kokoj.listTitles.push(innn.value);
-		kokoj.listColor.push(colorid.value);
+// function dataaa(e){
+// 	if (!innn.value==''){
+// 		kokoj.listTitles.push(innn.value);
+// 		kokoj.listColor.push(colorid.value);
 
-		localStorage.setItem('list', JSON.stringify(kokoj));
-		lstorage = JSON.parse(localStorage.getItem('list') ) ;
+// 		localStorage.setItem('list', JSON.stringify(kokoj));
+// 		lstorage = JSON.parse(localStorage.getItem('list') ) ;
 
-	}
+// 	}
 
-}
+// }
 
 
 
@@ -473,9 +506,9 @@ function dataaa(e){
 
 
 //      	case('SPAN'): 
-//      	kokoj.listItems[arryname].splice(s,1);
-//     	localStorage.setItem('list', JSON.stringify(kokoj)); 
-// 						window.location.reload(); 
+     	// kokoj.listItems[arryname].splice(s,1);
+    	// localStorage.setItem('list', JSON.stringify(kokoj)); 
+		// 				window.location.reload(); 
 //      	 break ;
 
 
