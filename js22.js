@@ -11,7 +11,7 @@ let model = {
 
 
 
-	while : function(){
+	addItemArrays  : function(){
 		while(this.kokoj.listItems.length<this.kokoj.listTitles.length){
 			this.kokoj.listItems.push([]);
 			localStorage.setItem('list', JSON.stringify(this.kokoj));
@@ -21,6 +21,44 @@ let model = {
 
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -59,6 +97,11 @@ let control = {
 	
 		}
 	
+	},
+
+	lstorage : function(){
+		localStorage.setItem('list', JSON.stringify(model.kokoj));
+		window.location.reload();
 	},
 
 
@@ -150,7 +193,7 @@ let control = {
 	render : function(){
 		view.html();
 		this.start();
-		model.while();
+		model.addItemArrays();
 		view.list( model.kokoj );
 		this.clickEvents();
 		this.changeEvents();
@@ -159,6 +202,43 @@ let control = {
 		this.mouseoverEvents();
 	}
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -275,19 +355,19 @@ let view ={
 			list.listTitles.push(e.target.children[0].value);
 			list.listColor.push(e.target.children[1].value);
 
-			// i want remove this down to be in control
-			localStorage.setItem('list', JSON.stringify(list));
+			control.lstorage();
 	},
 
 
 	listColor : function( list , e ){
+
 		let lnum = e.target.parentElement.getAttribute('num');
 
 		list.listColor[lnum] = e.target.value;
 		e.target.parentElement.style.backgroundColor=list.listColor[lnum];
 
-		// i want remove this down to be in control
-		localStorage.setItem('list',JSON.stringify(list));
+		control.lstorage();
+
 	},
 
 
@@ -308,20 +388,18 @@ let view ={
 
 		list.listTitles[lnum] = e.target.value;
 
-		// i want remove this down to be in control
-		localStorage.setItem('list', JSON.stringify(list));
-		window.location.reload();
+		control.lstorage();
 	},
 
 	listClose : function(list , e){
 		let lnum = e.target.parentElement.parentElement.getAttribute('num') ;
-				list.listTitles.splice(lnum,1);
-				list.listItems.splice(lnum,1);
-				list.listColor.splice(lnum,1);
 
-				// i want remove this down to be in control
-				localStorage.setItem('list', JSON.stringify(list)) ;
-				window.location.reload(); 
+		list.listTitles.splice(lnum,1);
+		list.listItems.splice(lnum,1);
+		list.listColor.splice(lnum,1);
+
+		control.lstorage();
+
 	},
 
 
@@ -347,9 +425,7 @@ let view ={
 	
 		list.listItems[lnum][inum]= e.target.value;
 
-		// i want remove this down to be in control
-		localStorage.setItem('list', JSON.stringify(list));
-		window.location.reload();
+		control.lstorage();
 		
 	},
 
@@ -359,10 +435,9 @@ let view ={
 			inum = e.target.parentElement.id ;
 
 		list.listItems[lnum].splice(inum,1);
-		
-		// i want remove this down to be in control
-		localStorage.setItem('list', JSON.stringify(list)); 
-		window.location.reload(); 
+
+		control.lstorage();
+
 	},
 
 
@@ -373,9 +448,7 @@ let view ={
 
 		list.listItems[lnum].push(value);
 
-		// i want remove this down to be in control
-		localStorage.setItem('list', JSON.stringify(list));
-	    window.location.reload();
+		control.lstorage();
   	}
 
 };
