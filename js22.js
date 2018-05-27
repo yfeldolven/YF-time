@@ -1,11 +1,15 @@
 let model = {
+
 	kokoj : {
 		listTitles:[],
 		listItems:[],
 		listColor:[]
 	},
 
+
 	lstorage : JSON.parse(localStorage.getItem('list') ) ,
+
+
 
 	while : function(){
 		while(this.kokoj.listItems.length<this.kokoj.listTitles.length){
@@ -14,6 +18,8 @@ let model = {
 			break;
 		} 
 	}
+
+
 };
 
 
@@ -21,18 +27,30 @@ let model = {
 
 
 let control = {
+
+
 	start : function(){
-		if(model.lstorage==null){
+
+		if( model.lstorage==null || model.lstorage.listTitles.length === 0 ){
+
 			localStorage.setItem('list' , JSON.stringify(model.kokoj) ) ;
 			view.start();
-		}
-		else{
+
+
+		}else{
+
 			model.kokoj = model.lstorage ;
+
 		}
+
 	},
 
+
+
 	data: function(){
+
 		if (!innn.value==''){
+
 			kokoj.listTitles.push(innn.value);
 			kokoj.listColor.push(colorid.value);
 	
@@ -44,7 +62,9 @@ let control = {
 	},
 
 
-	evets : function(list){
+	
+
+	clickEvents : function(){
 		document.addEventListener('click',function(e){
 
 			if(e.target.tagName === 'P' && e.target.className === 'items'){
@@ -52,23 +72,81 @@ let control = {
 			}
 
 
-			if(e.target.className === 'close item' ){
+			if( e.target.className === 'close item' ){
 				view.itemClose( model.kokoj , e );
 			}
 
-			console.log(
-				//e.target.id
-			);
+
+			if(e.target.className === 'name list'){
+				view.listEvent(model.kokoj , e)
+			}
+
+			
+			if( e.target.className === 'close list' ){
+				view.listClose( model.kokoj , e );
+			}
 		
 		});
 	},
+
+
+	changeEvents : function(){
+		document.addEventListener('change',function(e){
+
+			if ( e.target.parentElement.className === 'listt' && e.target.type === 'color' ){
+				view.listColor( model.kokoj , e );
+			}
+
+		})
+	},
+
+
+	keydownEvents : function(){
+		document.addEventListener('keydown',function(e){
+
+			if ( e.target.className === 'style list' && e.keyCode === 13 && e.target.value.match(/\S/g).length != 0 ){
+
+				view.listInputValue( model.kokoj , e );
+
+			}
+
+			if ( e.target.className === 'style name' && e.keyCode === 13 && e.target.value.match(/\S/g).length != 0 ){
+
+				view.listNameEdit( model.kokoj , e );
+
+			}
+
+			if ( e.target.className === 'style item' && e.keyCode === 13 && e.target.value.match(/\S/g).length != 0 ){
+
+				view.itemInputEdit( model.kokoj , e );
+
+			}
+
+		})
+	},
+
+
+	submitEvents : function(){
+		document.addEventListener('submit',function(e){
+
+			if ( e.target.className === 'NewList' && e.target.children[0].value.match(/\S/g).length != 0 ){
+
+				view.addNewList( model.kokoj , e );
+			}
+
+		})
+	},
+
 
 	render : function(){
 		view.html();
 		this.start();
 		model.while();
 		view.list( model.kokoj );
-		this.evets();
+		this.clickEvents();
+		this.changeEvents();
+		this.submitEvents();
+		this.keydownEvents();
 	}
 };
 
@@ -131,13 +209,14 @@ let view ={
 			closeIcon = document.createTextNode('\u00D7');
 
 
-			listColor.setAttribute('type','color');
+			listColor.setAttribute( 'type' , 'color' );
 			listName.textContent = list.listTitles[i];
-			mainInput.setAttribute('type','text');
-			mainInput.setAttribute('class','style');
+			listName.setAttribute( 'class' , 'name list' );
+			mainInput.setAttribute( 'type' , 'text' );
+			mainInput.setAttribute( 'class' , 'style list' );
 	
 			
-			close.className = 'close';
+			close.className = 'close list';
 			close.appendChild(closeIcon);
 			listName.appendChild(close);
 	
@@ -181,6 +260,60 @@ let view ={
 		document.getElementById('list').appendChild(parent);
 	},
 
+	addNewList : function( list , e ){
+
+			list.listTitles.push(e.target.children[0].value);
+			list.listColor.push(e.target.children[1].value);
+
+			// i want remove this down to be in control
+			localStorage.setItem('list', JSON.stringify(list));
+	},
+
+
+	listColor : function( list , e ){
+		let lnum = e.target.parentElement.getAttribute('num');
+
+		list.listColor[lnum] = e.target.value;
+		e.target.parentElement.style.backgroundColor=list.listColor[lnum];
+
+		// i want remove this down to be in control
+		localStorage.setItem('list',JSON.stringify(list));
+	},
+
+
+	listEvent : function(list , e){
+		let editInput = document.createElement('input'),
+			lnum = e.target.parentElement.getAttribute('num');
+
+			editInput.setAttribute('type','text');
+			editInput.setAttribute('value',list.listTitles[lnum]);
+			editInput.setAttribute('class','style name');
+
+			e.target.replaceWith(editInput);
+
+	},
+
+	listNameEdit : function( list , e ){
+		let lnum = e.target.parentElement.getAttribute('num');
+
+		list.listTitles[lnum] = e.target.value;
+
+		// i want remove this down to be in control
+		localStorage.setItem('list', JSON.stringify(list));
+		window.location.reload();
+	},
+
+	listClose : function(list , e){
+		let lnum = e.target.parentElement.parentElement.getAttribute('num') ;
+				list.listTitles.splice(lnum,1);
+				list.listItems.splice(lnum,1);
+				list.listColor.splice(lnum,1);
+
+				// i want remove this down to be in control
+				localStorage.setItem('list', JSON.stringify(list)) ;
+				window.location.reload(); 
+	},
+
 
 	itemEvent : function(list , e){
 		let editInput = document.createElement('input');
@@ -189,18 +322,25 @@ let view ={
 
 		editInput.setAttribute('type','text');
 		editInput.setAttribute('value',list.listItems[lnum][inum]);
-		editInput.setAttribute('class','style items');
+		editInput.setAttribute('class','style item');
+		editInput.setAttribute('id', inum );
+
 
 		e.target.replaceWith(editInput);
 
-		editInput.addEventListener('keydown',function(e){
-			if(e.keyCode=== 13){
-			list.listItems[lnum][inum]= e.target.value;
-			// i want remove this down to be in control
-			localStorage.setItem('list', JSON.stringify(model.kokoj));
-			window.location.reload();
-			}
-		});
+	},
+
+	itemInputEdit : function( list , e ){
+
+		let lnum = e.target.parentElement.getAttribute('num'),
+			inum = e.target.id ;
+	
+		list.listItems[lnum][inum]= e.target.value;
+
+		// i want remove this down to be in control
+		localStorage.setItem('list', JSON.stringify(list));
+		window.location.reload();
+		
 	},
 
 
@@ -210,9 +350,22 @@ let view ={
 
 		list.listItems[lnum].splice(inum,1);
 		// i want remove this down to be in control
-		localStorage.setItem('list', JSON.stringify(model.kokoj)); 
+		localStorage.setItem('list', JSON.stringify(list)); 
 		window.location.reload(); 
-	}
+	},
+
+
+	listInputValue : function( list , e ){
+
+		let value= e.target.value,
+			lnum = e.target.parentElement.getAttribute('num') ;
+
+		list.listItems[lnum].push(value);
+
+		// i want remove this down to be in control
+		localStorage.setItem('list', JSON.stringify(list));
+	    window.location.reload();
+  	}
 
 };
 
