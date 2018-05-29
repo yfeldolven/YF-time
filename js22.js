@@ -1,16 +1,20 @@
+// the main idea here is i put all list names as values in listTitles in kokoj
+// the isea is to to use dom to collect daata from inouts example
+//if
 let model = {
 
+	// our main data belong to here
 	kokoj : {
 		listTitles:[],
 		listItems:[],
 		listColor:[]
 	},
 
-
+	// get the data from our localstorage
 	lstorage : JSON.parse(localStorage.getItem('list') ) ,
 
 
-
+	// add array for evert list
 	addItemArrays  : function(){
 		while(this.kokoj.listItems.length<this.kokoj.listTitles.length){
 			this.kokoj.listItems.push([]);
@@ -66,7 +70,7 @@ let model = {
 
 let control = {
 
-
+	// checking if there is data or no
 	start : function(){
 
 		if( model.lstorage==null || model.lstorage.listTitles.length === 0 ){
@@ -83,30 +87,27 @@ let control = {
 
 	},
 
+	// to update our localStorage after every change
+	lstorage : function( noReload ){
 
+		if ( noReload === true ){
 
-	data: function(){
+			localStorage.setItem('list', JSON.stringify(model.kokoj));
 
-		if (!innn.value==''){
+		} else {
 
-			kokoj.listTitles.push(innn.value);
-			kokoj.listColor.push(colorid.value);
-	
-			localStorage.setItem('list', JSON.stringify(kokoj));
-			lstorage = JSON.parse(localStorage.getItem('list') ) ;
-	
+			localStorage.setItem('list', JSON.stringify(model.kokoj));
+
+			window.location.reload();
+
 		}
-	
-	},
 
-	lstorage : function(){
-		localStorage.setItem('list', JSON.stringify(model.kokoj));
-		window.location.reload();
 	},
 
 
 	
-
+	// all click events are here
+	// we use class name to know what is the target
 	clickEvents : function(){
 		document.addEventListener('click',function(e){
 
@@ -133,32 +134,41 @@ let control = {
 	},
 
 
+	// all change events belong to here
 	changeEvents : function(){
 		document.addEventListener('change',function(e){
 
-			if ( e.target.parentElement.className === 'listt' && e.target.type === 'color' ){
+
+			// to change the color of the list
+			if ( e.target.className === 'list color' ){
+
 				view.listColor( model.kokoj , e );
+				
 			}
 
 		})
 	},
 
 
+	// all keydown events are here
 	keydownEvents : function(){
 		document.addEventListener('keydown',function(e){
 
+			// to add items to the list if it has real value not only space or tab
 			if ( e.target.className === 'style list' && e.keyCode === 13 && e.target.value.match(/\S/g).length != 0 ){
 
-				view.listInputValue( model.kokoj , e );
+				view.addItems( model.kokoj , e );
 
 			}
 
+			// editing the list name if it has real value not only space or tab
 			if ( e.target.className === 'style name' && e.keyCode === 13 && e.target.value.match(/\S/g).length != 0 ){
 
 				view.listNameEdit( model.kokoj , e );
 
 			}
 
+			// to edit items if it has real value not only space or tab
 			if ( e.target.className === 'style item' && e.keyCode === 13 && e.target.value.match(/\S/g).length != 0 ){
 
 				view.itemInputEdit( model.kokoj , e );
@@ -169,27 +179,37 @@ let control = {
 	},
 
 
-
+	// here are all mouseover events
 	mouseoverEvents : function(){
+
 		document.addEventListener('mouseover',function(e){
+
+			//to focus on inputs when just the mouse over instead of click everytime
 			e.target.focus();
 		});
+
 	},
 
 
-
+	// here all submit events belong to
 	submitEvents : function(){
+
 		document.addEventListener('submit',function(e){
 
+			//to add new lists to the page if it has real value not only space or tab
 			if ( e.target.className === 'NewList' && e.target.children[0].value.match(/\S/g).length != 0 ){
 
 				view.addNewList( model.kokoj , e );
 			}
 
 		})
+
 	},
 
 
+
+	// to run the code of the page from modle or contorl or view
+	// some of them must run in order be aware
 	render : function(){
 		view.html();
 		this.start();
@@ -244,7 +264,9 @@ let control = {
 
 
 let view ={
+
 	html : function(){
+
 		let form = document.createElement('form'),
 			textInput = document.createElement('input'),
 			colorInput = document.createElement('input'),
@@ -280,6 +302,7 @@ let view ={
 	},
 
 	start : function(){
+
 		let listEmpty = document.createElement('p'),
 			listDiv = document.getElementById('list');
 
@@ -290,7 +313,9 @@ let view ={
 	
 	
 	list : function( list ){
+
 		for (var i=0; i<list.listTitles.length; i++){
+
 			let theList = document.createElement('span'),
 			listColor = document.createElement('input'),
 			mainInput =document.createElement('input'),
@@ -300,6 +325,7 @@ let view ={
 
 
 			listColor.setAttribute( 'type' , 'color' );
+			listColor.setAttribute('class','list color');
 			listName.textContent = list.listTitles[i];
 			listName.setAttribute( 'class' , 'name list' );
 			mainInput.setAttribute( 'type' , 'text' );
@@ -328,6 +354,7 @@ let view ={
 	items : function( parent , list , num ){
 
 		for ( let s=0; s < list.listItems[num].length ; s++ ){
+
 			let item = document.createElement('p'),
 				itemClose = document.createElement('SPAN'),
 				itemCloseTxt = document.createTextNode('\u00D7');
@@ -366,12 +393,14 @@ let view ={
 		list.listColor[lnum] = e.target.value;
 		e.target.parentElement.style.backgroundColor=list.listColor[lnum];
 
-		control.lstorage();
+		// we not reload the page because we need the change event keep working while changing the colors
+		control.lstorage( noReload = true );
 
 	},
 
 
 	listEvent : function(list , e){
+
 		let editInput = document.createElement('input'),
 			lnum = e.target.parentElement.getAttribute('num');
 
@@ -384,6 +413,7 @@ let view ={
 	},
 
 	listNameEdit : function( list , e ){
+
 		let lnum = e.target.parentElement.getAttribute('num');
 
 		list.listTitles[lnum] = e.target.value;
@@ -392,6 +422,7 @@ let view ={
 	},
 
 	listClose : function(list , e){
+
 		let lnum = e.target.parentElement.parentElement.getAttribute('num') ;
 
 		list.listTitles.splice(lnum,1);
@@ -404,6 +435,7 @@ let view ={
 
 
 	itemEvent : function(list , e){
+
 		let editInput = document.createElement('input');
 			lnum = e.target.parentElement.getAttribute('num'),
 			inum = e.target.id ;
@@ -423,7 +455,7 @@ let view ={
 		let lnum = e.target.parentElement.getAttribute('num'),
 			inum = e.target.id ;
 	
-		list.listItems[lnum][inum]= e.target.value;
+		list.listItems[lnum][inum] = e.target.value;
 
 		control.lstorage();
 		
@@ -431,6 +463,7 @@ let view ={
 
 
 	itemClose : function(list , e){
+
 		let lnum = e.target.parentElement.parentElement.getAttribute('num'),
 			inum = e.target.parentElement.id ;
 
@@ -441,7 +474,7 @@ let view ={
 	},
 
 
-	listInputValue : function( list , e ){
+	addItems : function( list , e ){
 
 		let value= e.target.value,
 			lnum = e.target.parentElement.getAttribute('num') ;
