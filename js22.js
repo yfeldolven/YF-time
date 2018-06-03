@@ -11,7 +11,7 @@ let model = {
 	},
 
 	// get the data from our localstorage
-	lstorage : JSON.parse(localStorage.getItem('list') ) ,
+	lstorage : null ,
 
 
 	// add array for evert list
@@ -67,7 +67,6 @@ let model = {
 
 
 
-
 let control = {
 
 	// checking if there is data or no
@@ -75,7 +74,7 @@ let control = {
 
 		if( model.lstorage==null || model.lstorage.listTitles.length === 0 ){
 
-			localStorage.setItem('list' , JSON.stringify(model.kokoj) ) ;
+			this.lstorage(false);
 			view.start();
 
 
@@ -87,20 +86,40 @@ let control = {
 
 	},
 
+	ajax : function(){
+		$.get("data.json", function(data, status){
+			model.lstorage =  data ;
+			model.kokoj = model.lstorage ;
+			//console.log(  model.kokoj );
+			control.render();
+        });
+	},
+
 	// to update our localStorage after every change
 	lstorage : function( noReload ){
 
-		if ( noReload === true ){
+		// $.PUT("data.json" , JSON.stringify(model.kokoj)  , function(){
+		// 	console.log(model.kokoj);
+		// 	JSON.stringify(model.kokoj) ;
+		// 	//console.log(model.kokoj);
+		// });
 
-			localStorage.setItem('list', JSON.stringify(model.kokoj));
+		// $.ajax({
+		// 	url:"data.json",
+		// 	type:"PUT",
+		// 	data: model.kokoj ,
+		// 	contentType:"application/json; charset=utf-8",
+		// 	dataType:"json",
+		// 	success: function(data, textStatus, jqXHR){
+		// 		console.log(data);
+		// 	}
+		// });
 
-		} else {
+		JSON.stringify( localStorage.setItem('list', model.kokoj) );
+		
 
-			localStorage.setItem('list', JSON.stringify(model.kokoj));
+			window.location.reload(noReload);
 
-			window.location.reload();
-
-		}
 
 	},
 
@@ -212,7 +231,7 @@ let control = {
 	// some of them must run in order be aware
 	render : function(){
 		view.html();
-		this.start();
+		//this.start();
 		model.addItemArrays();
 		view.list( model.kokoj );
 		this.clickEvents();
@@ -220,6 +239,7 @@ let control = {
 		this.submitEvents();
 		this.keydownEvents();
 		this.mouseoverEvents();
+		
 	}
 };
 
@@ -348,6 +368,7 @@ let view ={
 		
 			this.items(theList , list , i);
 		} 
+		console.log(  model.kokoj );
 	},
 
 
@@ -394,7 +415,7 @@ let view ={
 		e.target.parentElement.style.backgroundColor=list.listColor[lnum];
 
 		// we not reload the page because we need the change event keep working while changing the colors
-		control.lstorage( noReload = true );
+		control.lstorage( false );
 
 	},
 
@@ -490,4 +511,4 @@ let view ={
 
 
 
-control.render();
+control.ajax();
