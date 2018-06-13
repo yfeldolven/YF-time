@@ -98,7 +98,7 @@ let control = {
 
 			localStorage.setItem('list', JSON.stringify(model.kokoj));
 
-			window.location.reload();
+			//window.location.reload();
 
 		}
 
@@ -112,7 +112,7 @@ let control = {
 		document.addEventListener('click',function(e){
 
 			if(e.target.tagName === 'P' && e.target.className === 'items'){
-				view.itemEvent(model.kokoj , e)
+				view.itemInput(model.kokoj , e)
 			}
 
 
@@ -155,21 +155,21 @@ let control = {
 		document.addEventListener('keydown',function(e){
 
 			// to add items to the list if it has real value not only space or tab
-			if ( e.target.className === 'style list' && e.keyCode === 13 && e.target.value.match(/\S/g).length != 0 ){
+			if ( e.target.className === 'style list' && e.keyCode === 13 && e.target.value.match(/\S/g)  ){
 
 				view.addItems( model.kokoj , e );
 
 			}
 
 			// editing the list name if it has real value not only space or tab
-			if ( e.target.className === 'style name' && e.keyCode === 13 && e.target.value.match(/\S/g).length != 0 ){
+			if ( e.target.className === 'style name' && e.keyCode === 13 && e.target.value.match(/\S/g)  ){
 
 				view.listNameEdit( model.kokoj , e );
 
 			}
 
 			// to edit items if it has real value not only space or tab
-			if ( e.target.className === 'style item' && e.keyCode === 13 && e.target.value.match(/\S/g).length != 0 ){
+			if ( e.target.className === 'style item' && e.keyCode === 13 && e.target.value.match(/\S/g) ){
 
 				view.itemInputEdit( model.kokoj , e );
 
@@ -197,10 +197,14 @@ let control = {
 		document.addEventListener('submit',function(e){
 
 			//to add new lists to the page if it has real value not only space or tab
-			if ( e.target.className === 'NewList' && e.target.children[0].value.match(/\S/g).length != 0 ){
+			if ( e.target.className === 'NewList' && e.target.children[0].value.match(/\S/g) ){
 
 				view.addNewList( model.kokoj , e );
+
+				e.preventDefault();
 			}
+
+			e.preventDefault();
 
 		})
 
@@ -301,6 +305,8 @@ let view ={
 
 	},
 
+
+
 	start : function(){
 
 		let listEmpty = document.createElement('p'),
@@ -311,79 +317,84 @@ let view ={
 		listDiv.appendChild(listEmpty);
 	},
 	
+
+
 	
 	list : function( list ){
 
 		for (var i=0; i<list.listTitles.length; i++){
 
-			let theList = document.createElement('span'),
-			listColor = document.createElement('input'),
-			mainInput =document.createElement('input'),
-			listName = document.createElement('p'),
-			close = document.createElement('SPAN'),
-			closeIcon = document.createTextNode('\u00D7');
+			this.items(
 
+				this.listElement(
+					this.listNameElement( list.listTitles[i] ),
+					i ,
+					list.listColor[i]
+				),
 
-			listColor.setAttribute( 'type' , 'color' );
-			listColor.setAttribute('class','list color');
-			listName.textContent = list.listTitles[i];
-			listName.setAttribute( 'class' , 'name list' );
-			mainInput.setAttribute( 'type' , 'text' );
-			mainInput.setAttribute( 'class' , 'style list' );
-	
-			
-			close.className = 'close list';
-			close.appendChild(closeIcon);
-			listName.appendChild(close);
-	
-	
-			theList.setAttribute('class','listt');
-			theList.setAttribute('num', i );
-			theList.appendChild(listColor);
-			theList.appendChild(listName);
-			theList.appendChild(mainInput);
-	
-			listColor.setAttribute('value' , list.listColor[i] );
-			theList.style.backgroundColor = list.listColor[i];
-		
-			this.items(theList , list , i);
+				list ,
+
+				i
+			);
+
 		} 
 	},
+
 
 
 	items : function( parent , list , num ){
 
 		for ( let s=0; s < list.listItems[num].length ; s++ ){
 
-			let item = document.createElement('p'),
-				itemClose = document.createElement('SPAN'),
-				itemCloseTxt = document.createTextNode('\u00D7');
-
-
-			item.textContent = list.listItems[num][s];
-			item.setAttribute('class','items');
-			item.setAttribute('id',s);
-
-
-	 		itemClose.className = 'close item';
-	 		itemClose.appendChild(itemCloseTxt);
-	 		item.appendChild(itemClose);
-
-			parent.appendChild(item) ;
+			parent.appendChild(
+				this.itemElement(
+				num ,
+				s ,
+				list.listItems[num][s]
+				)
+			);
 			
-
-
 		}
+
 		document.getElementById('list').appendChild(parent);
 	},
 
+
+
 	addNewList : function( list , e ){
+		let listDiv = document.getElementById('list') ;
 
-			list.listTitles.push(e.target.children[0].value);
-			list.listColor.push(e.target.children[1].value);
+		list.listTitles.push(e.target.children[0].value);
 
-			control.lstorage();
+		list.listItems.push([]);
+
+		list.listColor.push(e.target.children[1].value);
+
+
+		if( listDiv.children[0].tagName == 'P' ){
+			listDiv.children[0].remove();
+		}
+
+		listDiv.appendChild(
+
+			this.listElement(
+
+				this.listNameElement(e.target.children[0].value),
+
+				list.listTitles.length-1 ,
+
+				e.target.children[1].value
+			)
+		);
+
+
+		control.lstorage(true);
+
+		e.target.children[0].value = '' ;
+
 	},
+
+
 
 
 	listColor : function( list , e ){
@@ -412,29 +423,54 @@ let view ={
 
 	},
 
+
+
 	listNameEdit : function( list , e ){
 
 		let lnum = e.target.parentElement.getAttribute('num');
 
 		list.listTitles[lnum] = e.target.value;
+		
+		e.target.replaceWith(
+			this.listNameElement(
+				e.target.value
+			)
+		);
 
-		control.lstorage();
+		control.lstorage(true);
 	},
+
+
 
 	listClose : function(list , e){
 
 		let lnum = e.target.parentElement.parentElement.getAttribute('num') ;
 
-		list.listTitles.splice(lnum,1);
-		list.listItems.splice(lnum,1);
-		list.listColor.splice(lnum,1);
+		list.listTitles.splice(lnum,1) ;
+		list.listItems.splice(lnum,1) ;
+		list.listColor.splice(lnum,1) ;
 
-		control.lstorage();
+		control.lstorage(true);
+
+		e.target.parentElement.parentElement.remove();
+		this.updateNumAttr();
+
+		control.start();
 
 	},
 
+	updateNumAttr : function(){
+		let numsAttr = document.querySelectorAll('.listt');
+		for (let n = 0 ; n < numsAttr.length ; n++ ){
+			numsAttr[n].setAttribute( 'num' , n ) ;
+			//console.log( numsAttr[n] );
+		}
+	},
 
-	itemEvent : function(list , e){
+
+
+
+	itemInput : function(list , e){
 
 		let editInput = document.createElement('input');
 			lnum = e.target.parentElement.getAttribute('num'),
@@ -450,39 +486,152 @@ let view ={
 
 	},
 
+
+
+
 	itemInputEdit : function( list , e ){
 
 		let lnum = e.target.parentElement.getAttribute('num'),
 			inum = e.target.id ;
 	
 		list.listItems[lnum][inum] = e.target.value;
-
-		control.lstorage();
+		
+		e.target.replaceWith(
+			this.itemElement(
+				lnum , 
+				inum ,
+				e.target.value
+			)
+		);
+		
+		control.lstorage(true);
 		
 	},
+
 
 
 	itemClose : function(list , e){
 
 		let lnum = e.target.parentElement.parentElement.getAttribute('num'),
-			inum = e.target.parentElement.id ;
+			inum = e.target.parentElement.id ,
+			span = e.target.parentElement.parentElement ;
 
-		list.listItems[lnum].splice(inum,1);
+		list.listItems[lnum].splice( inum , 1 );
 
-		control.lstorage();
+		control.lstorage(true);
+
+		e.target.parentElement.remove();
+
+		this.updateIdAttr( span );
 
 	},
+
+
+
+	updateIdAttr : function( span ){
+
+		let numsAttr = span.querySelectorAll('.items');
+
+		for (let n = 0 ; n < numsAttr.length ; n++ ){
+
+			numsAttr[n].setAttribute( 'id' , n ) ;
+
+		}
+	},
+
+
 
 
 	addItems : function( list , e ){
 
 		let value= e.target.value,
 			lnum = e.target.parentElement.getAttribute('num') ;
+		
+
+		e.target.parentElement.appendChild(
+			this.itemElement(
+				lnum ,
+				list.listItems[lnum].length ,
+				value 
+			) 
+		);
 
 		list.listItems[lnum].push(value);
+		e.target.value = '' ;
 
-		control.lstorage();
-  	}
+		control.lstorage(true);
+	  },
+
+
+
+
+	  itemElement : function( lnumNum , inumNum , value , parent ){
+		let lnum = lnumNum ,
+			inum = inumNum ,
+			item = document.createElement('p'),
+			itemClose = document.createElement('SPAN'),
+			itemCloseTxt = document.createTextNode('\u00D7');
+
+		item.textContent = value ;
+		item.setAttribute('class','items');
+		item.setAttribute('id', inum );
+
+
+		itemClose.className = 'close item';
+		itemClose.appendChild(itemCloseTxt);
+		item.appendChild(itemClose);
+
+		return item ;
+
+	  },
+
+
+
+
+	  listNameElement : function( name ){
+		let listName = document.createElement('p'),
+			close = document.createElement('SPAN'),
+			closeIcon = document.createTextNode('\u00D7');
+
+		listName.textContent = name;
+		listName.setAttribute( 'class' , 'name list' );
+
+		close.className = 'close list';
+		close.appendChild(closeIcon);
+		listName.appendChild(close);
+
+		return listName ;
+	  },
+
+
+
+
+	  listElement : function ( name , Num , color) {
+
+		let theList = document.createElement('span'),
+		listColor = document.createElement('input'),
+		mainInput =document.createElement('input');
+
+
+		listColor.setAttribute( 'type' , 'color' );
+		listColor.setAttribute('class','list color');
+		mainInput.setAttribute( 'type' , 'text' );
+		mainInput.setAttribute( 'class' , 'style list' );
+
+
+		theList.setAttribute('class','listt');
+		theList.setAttribute('num', Num );
+
+		theList.appendChild(listColor);
+		theList.appendChild(name);
+		theList.appendChild(mainInput);
+
+		listColor.setAttribute('value' , color );
+		theList.style.backgroundColor = color ;
+
+		return theList ;
+
+	  }
 
 };
 
